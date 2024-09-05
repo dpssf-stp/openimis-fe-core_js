@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 
 const LOGIN_PAGE_CONTRIBUTION_KEY = "core.LoginPage";
 
-const LoginPage = ({ logo }) => {
+const LoginPage = ({ logo, logoFull }) => {
   const classes = useStyles();
   const history = useHistory();
   const modulesManager = useModulesManager();
@@ -118,7 +118,7 @@ const LoginPage = ({ logo }) => {
             <Box p={6} width={380}>
               <Grid container spacing={2} direction="column" alignItems="stretch">
                 <Grid item container direction="row" alignItems="center">
-                  <img className={classes.logo} src={logo} />
+                  <img className={classes.logo} src={logoFull} />
                   {!isWorker && (
                     <Box pl={2} fontWeight="fontWeightMedium" fontSize="h4.fontSize">
                       {formatMessage("appName")}
