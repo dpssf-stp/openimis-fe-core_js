@@ -21,6 +21,7 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import Contributions from "./generics/Contributions";
 import FormattedMessage from "./generics/FormattedMessage";
+import MainMenuBar from "./MainMenuBar";
 import JournalDrawer from "./JournalDrawer";
 import { useBoolean, useAuthentication } from "../helpers/hooks";
 import LanguageQuickPicker from "../pickers/LanguageQuickPicker";
@@ -28,6 +29,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { Switch } from "@material-ui/core";
 import { useTranslations } from "../helpers/i18n";
 import { DEFAULT } from "../constants";
+
 
 export const APP_BAR_CONTRIBUTION_KEY = "core.AppBar";
 export const MAIN_MENU_CONTRIBUTION_KEY = "core.MainMenu";
@@ -204,7 +206,7 @@ const RequireAuth = (props) => {
   const {
     children,
     logo,
-    whiteLogo,
+    disableTextLogo,
     redirectTo,
     isSecondaryCalendar,
     setSecondaryCalendar,
@@ -224,6 +226,7 @@ const RequireAuth = (props) => {
     false,
   );
   const isWorker = modulesManager.getConf("fe-core", "isWorker", DEFAULT.IS_WORKER);
+  const showJournalSidebar = modulesManager.getConf("fe-core", "showJournalSidebar", DEFAULT.SHOW_JOURNAL_SIDEBAR);
 
   const isAppBarMenu = useMemo(() => theme.menu.variant.toUpperCase() === "APPBAR", [theme.menu.variant]);
 
@@ -253,10 +256,12 @@ const RequireAuth = (props) => {
           <Button className={classes.appName} onClick={(e) => (window.location.href = "/front")}>
             {isAppBarMenu && (
               <Hidden smDown implementation="css">
-                <img className={classes.logo} src={isWorker && !!whiteLogo ? whiteLogo : logo} alt="Logo of openIMIS" />
+                <img className={classes.logo} src={logo} alt="Logo of openIMIS" />
               </Hidden>
             )}
-            <FormattedMessage module="core" id="appName" defaultMessage={<FormattedMessage id="root.appName" />} />
+            {!disableTextLogo && (
+              <FormattedMessage module="core" id="appName" defaultMessage={<FormattedMessage id="root.appName" />} />
+            )}
             <Hidden smDown implementation="css">
             <Tooltip title={modulesManager.getModulesVersions().join(", ")}>
               <Typography variant="caption" className={classes.appVersions}>
@@ -266,10 +271,9 @@ const RequireAuth = (props) => {
           </Hidden>
           </Button>
             <div className={classes.drawerContainer}></div>
-                  <Contributions {...others} contributionKey={MAIN_MENU_CONTRIBUTION_KEY} menuVariant="Drawer">
-                    <Divider />
-
-              </Contributions>
+              <MainMenuBar {...others} menuVariant="Drawer" contributionKey={MAIN_MENU_CONTRIBUTION_KEY}>
+                <Divider />
+              </MainMenuBar>
             <div/>
             </Drawer>  
           <JournalDrawer open={isDrawerOpen} handleDrawer={setDrawerOpen.toggle} />
@@ -286,8 +290,9 @@ const RequireAuth = (props) => {
     <>
       <AppBar
         position="fixed"
-        className={clsx(classes.appBar, {
+        className={clsx({
           [classes.appBarShift]: isOpen && theme.breakpoints.up("md"),
+          [classes.appBar]: showJournalSidebar,
         })}
       >
         <Toolbar>
@@ -301,10 +306,10 @@ const RequireAuth = (props) => {
           <Button className={classes.appName} onClick={(e) => history.push("/")}>
             {isAppBarMenu && (
               <Hidden smDown implementation="css">
-                <img className={classes.logo} src={isWorker && !!whiteLogo ? whiteLogo : logo} alt="Logo of openIMIS" />
+                <img className={classes.logo} src={logo} alt="Logo of openIMIS" />
               </Hidden>
             )}
-            {!isWorker && (
+            {!disableTextLogo && (
               <FormattedMessage module="core" id="appName" defaultMessage={<FormattedMessage id="root.appName" />} />
             )}
           </Button>
@@ -317,9 +322,9 @@ const RequireAuth = (props) => {
           </Hidden>
           {isAppBarMenu && (
             <Hidden smDown implementation="css">
-              <Contributions {...others} menuVariant="AppBar" contributionKey={MAIN_MENU_CONTRIBUTION_KEY}>
+              <MainMenuBar {...others} menuVariant="AppBar" contributionKey={MAIN_MENU_CONTRIBUTION_KEY}>
                 <div onClick={setOpen.off} />
-              </Contributions>
+              </MainMenuBar>
             </Hidden>
           )}
           {isWorker ? (
@@ -359,18 +364,19 @@ const RequireAuth = (props) => {
                 paper: classes.drawerPaper,
               }}
             >
-              <Contributions {...others} contributionKey={MAIN_MENU_CONTRIBUTION_KEY} menuVariant="Drawer">
+              <MainMenuBar {...others} menuVariant="Drawer" contributionKey={MAIN_MENU_CONTRIBUTION_KEY}>
                 <Divider />
-              </Contributions>
+              </MainMenuBar>
             </Drawer>
           </nav>
         </ClickAwayListener>
       )}
-      <JournalDrawer open={isDrawerOpen} handleDrawer={setDrawerOpen.toggle} />
+      {showJournalSidebar && <JournalDrawer open={isDrawerOpen} handleDrawer={setDrawerOpen.toggle} />}
       <div className={classes.toolbar} />
       <main
-        className={clsx(classes.content, {
+        className={clsx({
           [classes.jrnlContentShift]: isDrawerOpen,
+          [classes.content]: showJournalSidebar,
         })}
       >
         {children}

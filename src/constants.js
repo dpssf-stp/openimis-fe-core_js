@@ -126,6 +126,21 @@ export const RIGHT_VIEW_EU_MODAL = 203000;
 
 export const ENTER_KEY = "Enter";
 
+export const PUBLIC_PAGE_LANGUAGE_COOKIE_KEY = "publicPageLanguage";
+
 export const DEFAULT = {
   IS_WORKER: false,
+  ENABLE_PUBLIC_PAGE: false,
+  SHOW_JOURNAL_SIDEBAR: true,
+  DISABLED_VISIBILITY_BOOST: false,
 }
+
+export const EXPORT_FILE_FORMATS = {
+  // By default, the export file format is CSV
+  csv: "csv",
+  // The other available export file format is XLSX.
+  // It can be configured individually for each Searcher.
+  xlsx: "xlsx",
+};
+
+export const REQUEST_LIMIT = 5

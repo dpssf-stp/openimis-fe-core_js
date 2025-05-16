@@ -3,7 +3,7 @@ import { withTheme, withStyles } from "@material-ui/core/styles";
 import { injectIntl } from "react-intl";
 import { Fab, Grid, Paper, IconButton, Typography, Divider, Tooltip } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import SaveIcon from "@material-ui/icons/SaveAlt";
+import SaveIcon from "@material-ui/icons/Save";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import FormattedMessage from "./FormattedMessage";
 import Contributions from "./Contributions";
@@ -71,6 +71,7 @@ class Form extends Component {
       Panels,
       contributedPanelsKey = null,
       additionalTooltips = null,
+      enableActionButtons = false,
       ...others
     } = this.props;
 
@@ -193,9 +194,12 @@ class Form extends Component {
             Panels.map((P, idx) => (
               <Grid key={`form_panel_${idx}`} item xs={12}>
                 <P
+                  {...others}
                   edited={this.props.edited}
                   edited_id={this.props.edited_id}
-                  {...others}
+                  save={this.save}
+                  isSaving={this.state.saving}
+                  canSave={this.props.canSave}
                   onEditedChanged={this.onEditedChanged}
                 />
               </Grid>
@@ -208,12 +212,15 @@ class Form extends Component {
             />
           )}
         </form>
-        <div className={classes.tooltipContainer}>
-          {filteredTooltips.map((item, index) =>
-            <div className={classes.flexTooltip} key={index}>
-                {withTooltip(item.content, item.tooltip, index === 0 ? 'top' : 'left')}
-            </div>)}
-        </div>
+        {!enableActionButtons && (
+          <div className={classes.tooltipContainer}>
+            {filteredTooltips.map((item, index) => (
+              <div className={classes.flexTooltip} key={index}>
+                {withTooltip(item.content, item.tooltip, index === 0 ? "top" : "left")}
+              </div>
+            ))}
+          </div>
+        )}
       </Fragment>
     );
   }

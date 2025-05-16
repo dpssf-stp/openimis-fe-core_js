@@ -28,6 +28,8 @@ import ProgressOrError from "./components/generics/ProgressOrError";
 import ProxyPage from "./components/generics/ProxyPage";
 import PublishedComponent from "./components/generics/PublishedComponent";
 import Table from "./components/generics/Table";
+import TableService from "./components/generics/TableService";
+import TableServiceReview from "./components/generics/TableServiceReview";
 import SearcherExport from "./components/generics/SearcherExport";
 import Searcher from "./components/generics/Searcher";
 import SearcherPane from "./components/generics/SearcherPane";
@@ -119,17 +121,20 @@ import withHistory, {
   Redirect,
   NavLink,
 } from "./helpers/history";
+import { useToast } from "./helpers/ToastContext";
+import { usePublicPageLanguage } from "./helpers/PublicPageLanguageContext";
 import { validatePassword } from "./helpers/passwordValidator";
 import { passwordGenerator } from "./helpers/passwordGenerator"
 import { createFieldsBasedOnJSON, renderInputComponent } from "./helpers/json-handler-utils";
 import withModulesManager, { useModulesManager } from "./helpers/modules";
 import { formatJsonField } from "./helpers/jsonExt";
-import { RIGHT_ROLE_SEARCH, CLEARED_STATE_FILTER } from "./constants";
+import { RIGHT_ROLE_SEARCH, CLEARED_STATE_FILTER, EXPORT_FILE_FORMATS } from "./constants";
 import { authMiddleware } from "./middlewares";
 import RefreshAuthToken from "./components/RefreshAuthToken";
 import UserActivityReport from "./reports/UserActivityReport";
 import RegistersStatusReport from "./reports/RegistersStatusReport";
 import SearcherActionButton from "./components/generics/SearcherActionButton";
+import InfoButton from "./components/generics/InfoButton";
 
 const ROUTE_ROLES = "roles";
 const ROUTE_ROLE = "roles/role";
@@ -195,6 +200,7 @@ const DEFAULT_CONFIG = {
       icon: <AccountBox />,
       route: "/" + ROUTE_ROLES,
       filter: (rights) => rights.includes(RIGHT_ROLE_SEARCH),
+      id: 'admin.roleManagement',
     },
   ],
 };
@@ -302,6 +308,8 @@ export {
   ProxyPage,
   PublishedComponent,
   Table,
+  TableService,
+  TableServiceReview,
   SearcherExport,
   Searcher,
   SearcherPane,
@@ -324,4 +332,8 @@ export {
   renderInputComponent,
   SearcherActionButton,
   passwordGenerator,
+  EXPORT_FILE_FORMATS,
+  useToast,
+  InfoButton,
+  usePublicPageLanguage,
 };
